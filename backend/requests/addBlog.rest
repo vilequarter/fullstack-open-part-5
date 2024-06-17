@@ -1,0 +1,10 @@
+POST http://localhost:3003/api/blogs/
+Content-Type: application/json
+Authorization: Bearer 
+
+{
+  "title": "TestLoginMiddle",
+  "author": "Mr. Testman",
+  "url": "testmantest.com",
+  "likes": 1
+}

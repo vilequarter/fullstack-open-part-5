@@ -11,7 +11,7 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [notification, setNotification] = useState(null)
 
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
@@ -36,13 +36,19 @@ const App = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault()
-    console.log('logging in with', username, password)
 
     try {
       const user = await loginService.login({
         username, password,
       })
       blogService.setToken(user.token)
+      setNotification([
+        `${username} logged in successfully`,
+        false
+      ])
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
       setUser(user)
       setUsername('')
       setPassword('')
@@ -51,9 +57,9 @@ const App = () => {
         'loggedBlogappUser', JSON.stringify(user)
       )
     } catch(exception) {
-      setErrorMessage('Invalid username or password')
+      setNotification(['Invalid username or password', true])
       setTimeout(() => {
-        setErrorMessage(null)
+        setNotification(null)
       }, 5000)
     }
   }
@@ -74,12 +80,20 @@ const App = () => {
         url: url,
       }
       await blogService.create(newBlog)
+      setNotification([
+        `Blog ${newBlog.title} by ${newBlog.author} created`,
+        false
+      ])
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
       setAuthor('')
       setTitle('')
       setUrl('')
       setBlogs(await blogService.getAll())
+
     } catch(exception) {
-      setErrorMessage('Unable to add blog')
+      setErrorMessage(['Unable to add blog', true])
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
@@ -89,7 +103,7 @@ const App = () => {
   return (
     <div>
 
-      <Notification message={errorMessage} />
+      <Notification message={notification} />
 
       {user === null
         ? <LoginForm 

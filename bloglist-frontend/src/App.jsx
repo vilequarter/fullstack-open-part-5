@@ -3,6 +3,7 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import LoginForm from './components/LoginForm'
 import loginService from './services/login'
+import Notification from './components/Notification'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -17,6 +18,16 @@ const App = () => {
     )  
   }, [])
 
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem(
+      'loggedBlogappUser'
+    )
+    if(loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+    }
+  }, [])
+
   const handleLogin = async (event) => {
     event.preventDefault()
     console.log('logging in with', username, password)
@@ -28,7 +39,11 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
-    } catch(error) {
+      //localStorage
+      window.localStorage.setItem(
+        'loggedBlogappUser', JSON.stringify(user)
+      )
+    } catch(exception) {
       setErrorMessage('Invalid username or password')
       setTimeout(() => {
         setErrorMessage(null)
@@ -36,8 +51,19 @@ const App = () => {
     }
   }
 
+  const handleLogout = () => {
+    console.log('logout')
+
+    setUser(null)
+    //clear localStorage
+    window.localStorage.removeItem('loggedBlogappUser');
+  }
+
   return (
     <div>
+
+      <Notification message={errorMessage} />
+
       {user === null
         ? <LoginForm 
           handleLogin={handleLogin}
@@ -49,7 +75,9 @@ const App = () => {
         : 
         <>
           <h2>blogs</h2>
-          <h4>{`${user.name} logged in`}</h4>
+          <div>{`${user.name} logged in`}
+            <button onClick={handleLogout}>Logout</button>
+          </div>
           {blogs.map(blog =>
           <Blog key={blog.id} blog={blog} />
         )}</>

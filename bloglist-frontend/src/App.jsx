@@ -18,9 +18,12 @@ const App = () => {
   const blogFormRef = useRef()
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )  
+    const get = async () => {
+      const blogs = await blogService.getAll()
+      blogs.sort((a, b) => b.likes - a.likes)
+      setBlogs(blogs)
+    }
+    get();
   }, [])
 
   useEffect(() => {
@@ -65,8 +68,6 @@ const App = () => {
   }
 
   const handleLogout = () => {
-    console.log('logout')
-
     setUser(null)
     window.localStorage.removeItem('loggedBlogappUser');
   }
@@ -82,7 +83,9 @@ const App = () => {
       setTimeout(() => {
         setNotification(null)
       }, 5000)
-      setBlogs(await blogService.getAll())
+      const newBlogs = await blogService.getAll()
+      newBlogs.sort((a, b) => b.likes - a.likes)
+      setBlogs(newBlogs)
 
     } catch(exception) {
       setNotification(['Unable to add blog', true])
@@ -96,7 +99,9 @@ const App = () => {
     try {
       await blogService.update(newBlog.id, newBlog)
       //notification?
-      setBlogs(await blogService.getAll())
+      const newBlogs = await blogService.getAll()
+      newBlogs.sort((a, b) => b.likes - a.likes)
+      setBlogs(newBlogs)
     } catch(exception) {
       setNotification(['Unable to update blog', true])
       setTimeout(() => {

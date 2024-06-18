@@ -85,9 +85,22 @@ const App = () => {
       setBlogs(await blogService.getAll())
 
     } catch(exception) {
-      setErrorMessage(['Unable to add blog', true])
+      setNotification(['Unable to add blog', true])
       setTimeout(() => {
         setErrorMessage(null)
+      }, 5000)
+    }
+  }
+
+  const handleUpdate = async (newBlog) => {
+    try {
+      await blogService.update(newBlog.id, newBlog)
+      //notification?
+      setBlogs(await blogService.getAll())
+    } catch(exception) {
+      setNotification(['Unable to update blog', true])
+      setTimeout(() => {
+        setNotification(null)
       }, 5000)
     }
   }
@@ -123,7 +136,7 @@ const App = () => {
       <br/>
       <div>
         {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} handleUpdate={handleUpdate} />
         )}
       </div>
     </div>

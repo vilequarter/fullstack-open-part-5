@@ -10,8 +10,6 @@ import Toggleable from './components/Toggleable'
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
   const [notification, setNotification] = useState(null)
 
   const loginFormRef = useRef()
@@ -37,9 +35,7 @@ const App = () => {
     }
   }, [])
 
-  const handleLogin = async (event) => {
-    event.preventDefault()
-
+  const handleLogin = async (username, password) => {
     try {
       const user = await loginService.login({
         username, password,
@@ -53,8 +49,8 @@ const App = () => {
         setNotification(null)
       }, 5000)
       setUser(user)
-      setUsername('')
-      setPassword('')
+
+      loginFormRef.current.toggleVisibility()
       
       window.localStorage.setItem(
         'loggedBlogappUser', JSON.stringify(user)
@@ -110,20 +106,43 @@ const App = () => {
     }
   }
 
+  const handleRemove = async (blog) => {
+    try {
+      await blogService.remove(blog.id)
+      const newBlogs = await blogService.getAll()
+      newBlogs.sort((a, b) => b.likes - a.likes)
+      setBlogs(newBlogs)
+      setNotification([
+        `Blog "${blog.title}" deleted`,
+        false
+      ])
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
+    } catch(exception) {
+      setNotification(['Unable to delete blog', true])
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
+    }
+  }
+
   return (
     <div>
 
       <Notification message={notification} />
 
-      <Toggleable buttonLabel="Login" ref={loginFormRef}>
-        <LoginForm 
-          handleLogin={handleLogin}
-          setUsername={setUsername}
-          setPassword={setPassword}
-          username={username}
-          password={password}
-        />
-      </Toggleable>
+      <div style={{display: user === null ? '' : 'none'}}>
+        <Toggleable
+        buttonLabel="Login"
+        ref={loginFormRef}
+        >
+          <LoginForm 
+            handleLogin={handleLogin}
+          />
+        </Toggleable>
+      </div>
+
 
       {user !== null
         ? <div>{`${user.name} logged in`}
@@ -141,7 +160,13 @@ const App = () => {
       <br/>
       <div>
         {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} handleUpdate={handleUpdate} />
+        <Blog
+        key={blog.id}
+        blog={blog}
+        handleUpdate={handleUpdate}
+        handleRemove={handleRemove}
+        loggedUser={user}
+        />
         )}
       </div>
     </div>

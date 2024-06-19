@@ -4,6 +4,7 @@ import Blog from './Blog'
 
 describe('<Blog />', () => {
   let container
+  let mockHandler
 
   beforeEach(() => {
     const blog = {
@@ -12,11 +13,13 @@ describe('<Blog />', () => {
       url: 'https://reactpatterns.com/',
       likes: 7,
     }
+
+    mockHandler = vi.fn()
     
     container = render (
       <Blog
         blog={blog}
-        handleUpdate={null}
+        handleUpdate={mockHandler}
         handleRemove={null}
         loggedUser={null}
       />
@@ -40,5 +43,15 @@ describe('<Blog />', () => {
 
     const element = container.querySelector('.toggleableContent')
     expect(element).not.toHaveStyle('display: none')
+  })
+
+  test('clicking the like button twice calls the event hander twice', async () => {
+    const user = userEvent.setup()
+    const viewButton = screen.getByText('view', { exact: false })
+    await user.click(viewButton)
+    const likeButton = container.querySelector('#likeButton')
+    await user.click(likeButton)
+    await user.click(likeButton)
+    expect(mockHandler.mock.calls).toHaveLength(2)
   })
 })

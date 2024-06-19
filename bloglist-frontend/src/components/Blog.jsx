@@ -31,7 +31,8 @@ const Blog = ({ blog, handleUpdate, handleRemove, loggedUser }) => {
         <div>{blog.url}</div>
         <div>Likes: {blog.likes}
           <button
-            onClick={addLike}>
+            onClick={addLike}
+            id='likeButton'>
               Like
           </button>
         </div>

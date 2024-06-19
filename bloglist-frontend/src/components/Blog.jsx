@@ -24,7 +24,10 @@ const Blog = ({ blog, handleUpdate, handleRemove, loggedUser }) => {
       <button onClick={toggleVisibility}>
         {detailsVisible ? 'hide' : 'view'}
       </button>
-      <div style={{ display: detailsVisible ? '' : 'none' }}>
+      <div
+        style={{ display: detailsVisible ? '' : 'none' }}
+        className='toggleableContent'
+      >
         <div>{blog.url}</div>
         <div>Likes: {blog.likes}
           <button
@@ -32,7 +35,7 @@ const Blog = ({ blog, handleUpdate, handleRemove, loggedUser }) => {
               Like
           </button>
         </div>
-        <div>{blog.user.name}</div>
+        <div>{blog.user ? blog.user.name : ''}</div>
         <button
           onClick={removeBlog}
           style={{ display: loggedUser && loggedUser.username === blog.user.username ? '' : 'none' }}

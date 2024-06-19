@@ -21,7 +21,7 @@ const App = () => {
       blogs.sort((a, b) => b.likes - a.likes)
       setBlogs(blogs)
     }
-    get();
+    get()
   }, [])
 
   useEffect(() => {
@@ -51,7 +51,7 @@ const App = () => {
       setUser(user)
 
       loginFormRef.current.toggleVisibility()
-      
+
       window.localStorage.setItem(
         'loggedBlogappUser', JSON.stringify(user)
       )
@@ -65,7 +65,7 @@ const App = () => {
 
   const handleLogout = () => {
     setUser(null)
-    window.localStorage.removeItem('loggedBlogappUser');
+    window.localStorage.removeItem('loggedBlogappUser')
   }
 
   const handleCreateBlog = async (newBlog) => {
@@ -86,7 +86,7 @@ const App = () => {
     } catch(exception) {
       setNotification(['Unable to add blog', true])
       setTimeout(() => {
-        setErrorMessage(null)
+        setNotification(null)
       }, 5000)
     }
   }
@@ -132,12 +132,12 @@ const App = () => {
 
       <Notification message={notification} />
 
-      <div style={{display: user === null ? '' : 'none'}}>
+      <div style={{ display: user === null ? '' : 'none' }}>
         <Toggleable
-        buttonLabel="Login"
-        ref={loginFormRef}
+          buttonLabel="Login"
+          ref={loginFormRef}
         >
-          <LoginForm 
+          <LoginForm
             handleLogin={handleLogin}
           />
         </Toggleable>
@@ -146,27 +146,27 @@ const App = () => {
 
       {user !== null
         ? <div>{`${user.name} logged in`}
-            <button onClick={handleLogout}>Logout</button>
-          </div>
+          <button onClick={handleLogout}>Logout</button>
+        </div>
         : <></>
       }
 
       <h2>Blogs</h2>
       <Toggleable buttonLabel="add blog" ref={blogFormRef}>
-        <CreateBlogForm 
+        <CreateBlogForm
           handleCreateBlog={handleCreateBlog}
         />
       </Toggleable>
       <br/>
       <div>
         {blogs.map(blog =>
-        <Blog
-        key={blog.id}
-        blog={blog}
-        handleUpdate={handleUpdate}
-        handleRemove={handleRemove}
-        loggedUser={user}
-        />
+          <Blog
+            key={blog.id}
+            blog={blog}
+            handleUpdate={handleUpdate}
+            handleRemove={handleRemove}
+            loggedUser={user}
+          />
         )}
       </div>
     </div>

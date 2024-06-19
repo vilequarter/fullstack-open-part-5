@@ -8,7 +8,7 @@ const Blog = ({ blog, handleUpdate, handleRemove, loggedUser }) => {
   }
 
   const addLike = () => {
-    const newBlog = {...blog, likes: blog.likes + 1}
+    const newBlog = { ...blog, likes: blog.likes + 1 }
     handleUpdate(newBlog)
   }
 
@@ -17,14 +17,14 @@ const Blog = ({ blog, handleUpdate, handleRemove, loggedUser }) => {
       handleRemove(blog)
     }
   }
-  
+
   return(
     <div className="blog">
-      {blog.title} {blog.author} 
+      {blog.title} {blog.author}
       <button onClick={toggleVisibility}>
-        {detailsVisible ? "hide" : "view"}
+        {detailsVisible ? 'hide' : 'view'}
       </button>
-      <div style={{display: detailsVisible ? '' : 'none'}}>
+      <div style={{ display: detailsVisible ? '' : 'none' }}>
         <div>{blog.url}</div>
         <div>Likes: {blog.likes}
           <button
@@ -34,14 +34,14 @@ const Blog = ({ blog, handleUpdate, handleRemove, loggedUser }) => {
         </div>
         <div>{blog.user.name}</div>
         <button
-        onClick={removeBlog}
-        style={{display: loggedUser && loggedUser.username === blog.user.username ? '' : 'none'}}
+          onClick={removeBlog}
+          style={{ display: loggedUser && loggedUser.username === blog.user.username ? '' : 'none' }}
         >
           Delete
         </button>
       </div>
     </div>
-  )  
+  )
 }
 
 export default Blog

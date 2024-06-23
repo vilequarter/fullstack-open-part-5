@@ -160,7 +160,7 @@ const App = () => {
         />
       </Toggleable>
       <br/>
-      <div>
+      <div data-testid='blogList'>
         {blogs.map(blog =>
           <Blog
             key={blog.id}

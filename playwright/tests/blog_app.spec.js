@@ -73,12 +73,33 @@ describe('Blog app', () => {
         await expect(locator).toHaveText('1')
       })
   
-      test('only a user who created a blog can see the delete button', async ({ page }) => {
-  
+      test('only a user who created a blog can see the delete button', async ({ page, request }) => {
+        await page.getByRole('button', { name: "View" }).click()
+        await expect(page.getByRole('button', { name: "Delete" })).toBeVisible()
+        await page.getByRole('button', { name: "Logout" }).click()
+        await expect(page.getByRole('button', { name: "delete" })).not.toBeVisible()
+        await request.post('/api/users', {
+          data: {
+            name: 'Wrong User',
+            username: 'wrong',
+            password: 'incorrect'
+          }
+        })
+        await page.getByRole('button', { name: "login" }).click()
+        await loginWith(page, 'wrong', 'incorrect')
+        await expect(page.getByText('Wrong User logged in')).toBeVisible()
+        await expect(page.getByRole('button', { name: "delete" })).not.toBeVisible()
       })
   
       test('user who created a blog can delete it' , async ({ page }) => {
-  
+        page.on('dialog', dialog => {
+          console.log(dialog.message)
+          dialog.accept()
+        })
+        await page.getByRole('button', { name: "View" }).click()
+        await page.getByRole('button', { name: "Delete" }).click()
+        await expect(page.getByText('Blog "NewBlogTest" deleted')).toBeVisible()
+        await expect(page.getByTestId('blogList').filter({ has: page.locator('.blog')})).toHaveCount(0)
       })
     })
   })

@@ -6,7 +6,7 @@ const Blog = require('../models/blog');
 usersRouter.post('/', async (request, response, next) => {
   try{
     if(request.body.username === undefined || request.body.password === undefined){
-      return response.status(400).send({ error: 'expected `username` and `password`' });
+      return response.status(400).send({ error: 'expected username and password' });
     };
     if(request.body.username.length < 3 || request.body.password.length < 3){
       return response.status(400).send({ error: 'username and password must be at least 3 characters' });
@@ -26,6 +26,7 @@ usersRouter.post('/', async (request, response, next) => {
   
     response.status(201).json(savedUser);
   } catch(exception) {
+    console.log(exception)
     next(exception);
   };
 });

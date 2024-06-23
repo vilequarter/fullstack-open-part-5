@@ -66,7 +66,11 @@ describe('Blog app', () => {
       })
 
       test('a blog can be liked', async ({ page }) => {
-        
+        await page.getByRole('button', { name: "View" }).click()
+        const locator = page.getByTestId('likes')
+        await expect(locator).toHaveText('0')
+        await page.getByRole('button', { name: "Like" }).click()
+        await expect(locator).toHaveText('1')
       })
   
       test('only a user who created a blog can see the delete button', async ({ page }) => {

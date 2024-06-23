@@ -29,7 +29,7 @@ const Blog = ({ blog, handleUpdate, handleRemove, loggedUser }) => {
         className='toggleableContent'
       >
         <div>{blog.url}</div>
-        <div>Likes: {blog.likes}
+        <div>Likes: <div data-testid='likes'>{blog.likes}</div>
           <button
             onClick={addLike}
             id='likeButton'>

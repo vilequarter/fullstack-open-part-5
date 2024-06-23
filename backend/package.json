@@ -9,7 +9,8 @@
     "test": "cross-env NODE_ENV=test node --test",
     "test-only": "npm run test -- --test-only",
     "lint": "eslint .",
-    "build:ui": "@powershell Remove-Item -Recurse -Force ./backend/dist && cd ./frontend && npm run build && @powershell Copy-Item dist -Recurse ../backend"
+    "build:ui": "@powershell Remove-Item -Recurse -Force ./backend/dist && cd ./frontend && npm run build && @powershell Copy-Item dist -Recurse ../backend",
+    "start:test": "cross-env NODE_ENV=test node index.js"
   },
   "author": "David Parady",
   "license": "MIT",

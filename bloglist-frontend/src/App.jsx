@@ -136,6 +136,7 @@ const App = () => {
         <Toggleable
           buttonLabel="Login"
           ref={loginFormRef}
+          default={true}
         >
           <LoginForm
             handleLogin={handleLogin}
@@ -155,6 +156,7 @@ const App = () => {
       <Toggleable buttonLabel="add blog" ref={blogFormRef}>
         <CreateBlogForm
           handleCreateBlog={handleCreateBlog}
+          default={false}
         />
       </Toggleable>
       <br/>

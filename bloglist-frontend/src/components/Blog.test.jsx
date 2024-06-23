@@ -15,7 +15,7 @@ describe('<Blog />', () => {
     }
 
     mockHandler = vi.fn()
-    
+
     container = render (
       <Blog
         blog={blog}

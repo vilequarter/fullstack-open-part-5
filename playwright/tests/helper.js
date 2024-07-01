@@ -10,6 +10,5 @@ const createBlog = async (page, blog) => {
   await page.locator('input[name="Author"]').fill(blog.author)
   await page.locator('input[name="Url"]').fill(blog.url)
   await page.getByRole('button', { name: "Create" }).click()
-}
 
 export { loginWith, createBlog }

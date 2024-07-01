@@ -102,11 +102,54 @@ describe('Blog app', () => {
         await expect(page.getByTestId('blogList').filter({ has: page.locator('.blog')})).toHaveCount(0)
       })
     })
-  })
 
-  describe('Blog sorting', () => {
-    test('blog list is sorted by descending likes', async ({ page }) => {
+    describe('Blog sorting', () => {
+      test('blog list is sorted by descending likes', async ({ page }) => {
+        const newBlogs = [
+          {
+            title: "blog1",
+            author: "test",
+            url: "www.blog1.com"
+          },
+          {
+            title: "blog2",
+            author: "test",
+            url: "www.blog2.com"
+          },
+          {
+            title: "blog3",
+            author: "test",
+            url: "www.blog3.com"
+          }
+        ]
+        //create 4 blogs
+        await createBlog(page, newBlogs[0])
+        await createBlog(page, newBlogs[1])
+        await createBlog(page, newBlogs[2])
 
+        const blogList = page.getByTestId('blogList')
+        const blog1 = blogList.locator('div').filter({ hasText: 'blog1' })
+        const blog2 = blogList.locator('div').filter({ hasText: 'blog2' })
+        const blog3 = blogList.locator('div').filter({ hasText: 'blog3' })
+
+        //open details of all blogs
+        await blog1.getByRole('button').click()
+        await blog2.getByRole('button').click()
+        await blog3.getByRole('button').click()
+      
+        await expect(blogList.locator('.blog').first()).toContainText('blog1')
+
+        await blog2.locator('#likeButton').click()
+        await expect(blogList.locator('.blog').first()).toContainText('blog2')
+
+        await blog3.locator('#likeButton').click()
+        await expect(blog3.getByTestId('likes')).toHaveText('1')
+        await blog3.locator('#likeButton').click()
+        await expect(blog3.getByTestId('likes')).toHaveText('2')
+        await expect(blogList.locator('.blog').first()).toContainText('blog3')
+        await expect(blogList.locator('.blog').nth(1)).toContainText('blog2')
+        await expect(blogList.locator('.blog').last()).toContainText('blog1')
+      })
     })
   })
 })
